@@ -1,0 +1,154 @@
+jogo-de-escolhas/
+├── index.html
+├── style.css
+└── script.js
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Escolhas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Jogo de Escolhas</h1>
+    <div id="historia" class="historia">
+      <!-- Texto da história será exibido aqui -->
+    </div>
+    <div id="opcoes" class="opcoes">
+      <!-- Botões de escolhas serão exibidos aqui -->
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #333;
+  color: #fff;
+}
+
+.container {
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.historia {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.opcoes button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.opcoes button:hover {
+  background-color: #444;
+}
+// Estrutura da história com cada cenário e suas escolhas
+const historia = {
+  inicio: {
+    texto: "Você acorda em uma floresta escura. Ao seu redor, há duas trilhas. Uma leva para a esquerda e a outra para a direita.",
+    opcoes: [
+      { texto: "Seguir pela trilha da esquerda", proximo: "trilha_esquerda" },
+      { texto: "Seguir pela trilha da direita", proximo: "trilha_direita" }
+    ]
+  },
+  trilha_esquerda: {
+    texto: "Você segue pela trilha da esquerda e encontra um rio. Há uma ponte velha e uma trilha que contorna o rio.",
+    opcoes: [
+      { texto: "Atravessar a ponte", proximo: "ponte" },
+      { texto: "Contornar o rio", proximo: "rio" }
+    ]
+  },
+  trilha_direita: {
+    texto: "Você segue pela trilha da direita e encontra uma caverna. Você pode entrar na caverna ou continuar pela trilha.",
+    opcoes: [
+      { texto: "Entrar na caverna", proximo: "caverna" },
+      { texto: "Continuar pela trilha", proximo: "floresta" }
+    ]
+  },
+  ponte: {
+    texto: "Você atravessa a ponte com sucesso, mas ela quebra atrás de você. Agora, você está em uma área desconhecida.",
+    opcoes: [
+      { texto: "Explorar a área", proximo: "fim_sucesso" }
+    ]
+  },
+  rio: {
+    texto: "Enquanto contorna o rio, você escorrega e cai na água. Infelizmente, você não consegue nadar e se afoga.",
+    opcoes: [
+      { texto: "Recomeçar", proximo: "inicio" }
+    ]
+  },
+  caverna: {
+    texto: "Você entra na caverna e encontra um urso hibernando. Infelizmente, você o acorda e ele não está feliz.",
+    opcoes: [
+      { texto: "Recomeçar", proximo: "inicio" }
+    ]
+  },
+  floresta: {
+    texto: "Você continua pela trilha e eventualmente encontra uma saída da floresta. Você está salvo!",
+    opcoes: [
+      { texto: "Recomeçar", proximo: "inicio" }
+    ]
+  },
+  fim_sucesso: {
+    texto: "Você explora a área e encontra uma vila. Os aldeões te ajudam e você finalmente está seguro. Parabéns, você venceu!",
+    opcoes: [
+      { texto: "Recomeçar", proximo: "inicio" }
+    ]
+  }
+};
+
+// Inicializa o jogo na cena "inicio"
+let cenaAtual = "inicio";
+
+// Função para atualizar o conteúdo do jogo com base na cena atual
+function atualizarCena() {
+  const cena = historia[cenaAtual];
+  const historiaDiv = document.getElementById("historia");
+  const opcoesDiv = document.getElementById("opcoes");
+
+  // Atualiza o texto da história
+  historiaDiv.innerText = cena.texto;
+
+  // Limpa as opções anteriores
+  opcoesDiv.innerHTML = "";
+
+  // Adiciona botões para cada opção
+  cena.opcoes.forEach(opcao => {
+    const botao = document.createElement("button");
+    botao.innerText = opcao.texto;
+    botao.onclick = () => {
+      cenaAtual = opcao.proximo;
+      atualizarCena();
+    };
+    opcoesDiv.appendChild(botao);
+  });
+}
+
+// Inicia o jogo
+window.onload = atualizarCena;
